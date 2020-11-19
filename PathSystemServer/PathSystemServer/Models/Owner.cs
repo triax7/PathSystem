@@ -11,7 +11,8 @@ namespace PathSystemServer.Models
         public string Name { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }
-        public ICollection<RefreshToken> RefreshTokens { get; set; }
+        public ICollection<OwnerRefreshToken> RefreshTokens { get; set; }
+        public ICollection<Route> Routes { get; set; }
         public Role Role { get; set; }
     }
 

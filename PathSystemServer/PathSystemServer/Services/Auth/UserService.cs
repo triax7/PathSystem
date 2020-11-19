@@ -48,6 +48,9 @@ namespace PathSystemServer.Services.Auth
 
         public LoginSuccessDTO Register(RegisterDTO dto)
         {
+            if (_unitOfWork.Users.GetAll(u => u.Email == dto.Email) != null)
+                throw new ApplicationException("User not found");
+
             var user = new User
             {
                 Email = dto.Email,

@@ -28,5 +28,9 @@ namespace PathSystemServer
         }
         public DbSet<User> Users { get; set; }
         public DbSet<RefreshToken> RefreshTokens { get; set; }
+        public DbSet<Owner> Owners { get; set; }
+        public DbSet<Route> Routes { get; set; }
+        public DbSet<PathPoint> PathPoints { get; set; }
+        public DbSet<UserPathPoint> UserPathPoints { get; set; }
     }
 }

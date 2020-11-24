@@ -7,6 +7,7 @@ namespace PathSystemServer.Repository.UnitOfWork
         IUserRepository Users { get; }
         IRefreshTokenRepository RefreshTokens { get; }
         IOwnerRepository Owners { get; }
+        IOwnerRefreshTokenRepository OwnerRefreshTokens { get; }
         int Commit();
         void Dispose();
     }

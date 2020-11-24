@@ -7,6 +7,6 @@ namespace PathSystemServer.ViewModels.Auth
 {
     public class LoginSuccessViewModel
     {
-        public string UserName { get; set; }
+        public string Name { get; set; }
     }
 }

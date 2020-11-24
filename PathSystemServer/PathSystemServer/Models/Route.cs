@@ -9,6 +9,7 @@ namespace PathSystemServer.Models
     public class Route
     {
         public int Id { get; set; }
+        public string Name { get; set; }
         public ICollection<PathPoint> PathPoints { get; set; }
     }
 }

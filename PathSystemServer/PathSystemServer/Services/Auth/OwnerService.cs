@@ -18,12 +18,12 @@ using PathSystemServer.Repository.UnitOfWork;
 
 namespace PathSystemServer.Services.Auth
 {
-    public class UserService : IUserService
+    public class OwnerService : IOwnerService
     {
         private readonly JwtOptions _jwtOptions;
         private readonly IUnitOfWork _unitOfWork;
 
-        public UserService(IOptions<JwtOptions> jwtOptionsMonitor, IUnitOfWork unitOfWork)
+        public OwnerService(IOptions<JwtOptions> jwtOptionsMonitor, IUnitOfWork unitOfWork)
         {
             _jwtOptions = jwtOptionsMonitor.Value;
             _unitOfWork = unitOfWork;
@@ -31,75 +31,72 @@ namespace PathSystemServer.Services.Auth
 
         public LoginSuccessDTO Login(LoginDTO dto)
         {
-            var user = _unitOfWork.Users.GetAll().SingleOrDefault(u => u.Email == dto.Email);
+            var owner = _unitOfWork.Owners.GetAll().SingleOrDefault(u => u.Email == dto.Email);
 
-            if (user == null || !Crypto.VerifyHashedPassword(user.PasswordHash, dto.Password))
-                throw new ApplicationException("User not found");
+            if (owner == null || !Crypto.VerifyHashedPassword(owner.PasswordHash, dto.Password))
+                throw new ApplicationException("Owner not found");
 
-            var accessToken = GenerateAccessToken(user);
+            var accessToken = GenerateAccessToken(owner);
             var refreshToken = GenerateRefreshToken();
 
-            _unitOfWork.RefreshTokens.Add(new RefreshToken {Token = refreshToken, User = user});
+            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken { Token = refreshToken, Owner = owner });
 
             _unitOfWork.Commit();
 
-            return new LoginSuccessDTO(user.Name, accessToken, refreshToken);
+            return new LoginSuccessDTO(owner.Name, accessToken, refreshToken);
         }
 
         public LoginSuccessDTO Register(RegisterDTO dto)
         {
-            if (_unitOfWork.Users.GetAll(u => u.Email == dto.Email).SingleOrDefault() != null)
-            {
-                throw new ApplicationException("User already exists");
-            }
+            if (_unitOfWork.Owners.GetAll(u => u.Email == dto.Email).SingleOrDefault() != null)
+                throw new ApplicationException("Owner already exists");
 
-            var user = new User
+            var owner = new Owner
             {
                 Name = dto.Name,
                 Email = dto.Email,
                 PasswordHash = Crypto.HashPassword(dto.Password)
             };
 
-            _unitOfWork.Users.Add(user);
+            _unitOfWork.Owners.Add(owner);
 
-            var accessToken = GenerateAccessToken(user);
+            var accessToken = GenerateAccessToken(owner);
             var refreshToken = GenerateRefreshToken();
 
-            _unitOfWork.RefreshTokens.Add(new RefreshToken {Token = refreshToken, User = user});
+            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken { Token = refreshToken, Owner = owner });
 
             _unitOfWork.Commit();
 
-            return new LoginSuccessDTO(user.Name, accessToken, refreshToken);
+            return new LoginSuccessDTO(owner.Name, accessToken, refreshToken);
         }
 
         public LoginSuccessDTO UpdateAccessToken(JwtSecurityToken accessToken, string refreshToken)
         {
-            var user = GetUserFromToken(accessToken);
+            var owner = GetUserFromToken(accessToken);
 
-            if (user == null)
+            if (owner == null)
             {
-                throw new ApplicationException("User not found");
+                throw new ApplicationException("Owner not found");
             }
 
-            var newAccessToken = GenerateAccessToken(user);
+            var newAccessToken = GenerateAccessToken(owner);
             var newRefreshToken = GenerateRefreshToken();
 
-            _unitOfWork.RefreshTokens.Add(new RefreshToken { Token = newRefreshToken, User = user });
+            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken { Token = newRefreshToken, Owner = owner });
 
             _unitOfWork.Commit();
 
-            return new LoginSuccessDTO(user.Name, newAccessToken, newRefreshToken);
+            return new LoginSuccessDTO(owner.Name, newAccessToken, newRefreshToken);
         }
 
         public void RevokeRefreshToken(string refreshToken)
         {
-            var token = _unitOfWork.RefreshTokens.GetAll().FirstOrDefault(t => t.Token == refreshToken);
-            _unitOfWork.RefreshTokens.Delete(token);
+            var token = _unitOfWork.OwnerRefreshTokens.GetAll().FirstOrDefault(t => t.Token == refreshToken);
+            _unitOfWork.OwnerRefreshTokens.Delete(token);
 
             _unitOfWork.Commit();
         }
-
-        private string GenerateAccessToken(User user)
+        private string GenerateAccessToken(Owner owner)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var key = Encoding.ASCII.GetBytes(_jwtOptions.SecretKey);
@@ -107,8 +104,8 @@ namespace PathSystemServer.Services.Auth
             {
                 Subject = new ClaimsIdentity(new Claim[]
                 {
-                    new Claim(ClaimTypes.Name, user.Name),
-                    new Claim(ClaimTypes.Email, user.Email),
+                    new Claim(ClaimTypes.Name, owner.Name),
+                    new Claim(ClaimTypes.Email, owner.Email),
                 }),
                 Expires = DateTime.UtcNow.AddSeconds(_jwtOptions.ExpiryTime),
                 SigningCredentials =
@@ -128,14 +125,14 @@ namespace PathSystemServer.Services.Auth
             return Convert.ToBase64String(randomBytes);
         }
 
-        private User GetUserFromToken(JwtSecurityToken accessToken)
+        private Owner GetUserFromToken(JwtSecurityToken accessToken)
         {
             var email = accessToken.Claims
                 .FirstOrDefault(c => c.Type == "email")?.Value;
-            var user = _unitOfWork.Users
+            var owner = _unitOfWork.Owners
                 .GetAll(u => u.Email == email)
                 .FirstOrDefault();
-            return user;
+            return owner;
         }
     }
 }

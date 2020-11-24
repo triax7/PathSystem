@@ -15,12 +15,12 @@ namespace PathSystemServer.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class AccountController : ControllerBase
+    public class AccountsController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly IMapper _mapper;
 
-        public AccountController(IUserService userService, IMapper mapper)
+        public AccountsController(IUserService userService, IMapper mapper)
         {
             _userService = userService;
             _mapper = mapper;
@@ -55,6 +55,7 @@ namespace PathSystemServer.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
             var requestAccessToken = Request.Cookies["accessToken"];
+            if (refreshToken == null || requestAccessToken == null) return Unauthorized();
             var accessToken = new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
             var tokens = _userService.UpdateAccessToken(accessToken, refreshToken);
 

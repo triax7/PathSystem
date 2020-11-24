@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NetTopologySuite.Geometries;
 using PathSystemServer;
@@ -10,9 +11,10 @@ using PathSystemServer;
 namespace PathSystemServer.Migrations
 {
     [DbContext(typeof(ApplicationContext))]
-    partial class ApplicationContextModelSnapshot : ModelSnapshot
+    [Migration("20201124191124_AddedOwnerRefreshTokens")]
+    partial class AddedOwnerRefreshTokens
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -71,9 +73,6 @@ namespace PathSystemServer.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<Point>("Point")
                         .HasColumnType("geography");
 
@@ -114,9 +113,6 @@ namespace PathSystemServer.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<int?>("OwnerId")
                         .HasColumnType("int");
 
@@ -153,7 +149,7 @@ namespace PathSystemServer.Migrations
                             Id = 1,
                             Email = "admin@admin.admin",
                             Name = "Admin",
-                            PasswordHash = "AHVwC1Gelz8mveHqFETmCHnwyoa0HFeLBkNEOn0WFnIKkNQTRAygRzrWoVmfn9me4Q=="
+                            PasswordHash = "ALMUpkuKKJ0YnZpeKteSJJl5vNNEZlCcRa00E7MzqcU2mzkATYv20MIZQKIcAxqFKA=="
                         });
                 });
 

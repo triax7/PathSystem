@@ -95,6 +95,7 @@ namespace PathSystemServer
             services.AddScoped<IOwnerRefreshTokenRepository, OwnerRefreshTokenRepository>();
             services.AddScoped<IOwnerService, OwnerService>();
             services.AddScoped<IRouteRepository, RouteRepository>();
+            services.AddScoped<IPathPointRepository, PathPointRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

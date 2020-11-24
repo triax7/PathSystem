@@ -14,10 +14,12 @@ namespace PathSystemServer.Repository.UnitOfWork
         public IOwnerRepository Owners { get; }
         public IOwnerRefreshTokenRepository OwnerRefreshTokens { get; }
         public IRouteRepository Routes { get; }
+        public IPathPointRepository PathPoints { get; }
 
         public UnitOfWork(ApplicationContext context, IUserRepository userRepository,
             IRefreshTokenRepository refreshTokenRepository, IOwnerRepository ownerRepository,
-            IOwnerRefreshTokenRepository ownerRefreshTokenRepository, IRouteRepository routeRepository)
+            IOwnerRefreshTokenRepository ownerRefreshTokenRepository, IRouteRepository routeRepository,
+            IPathPointRepository pathPointRepository)
         {
             _context = context;
             Users = userRepository;
@@ -25,6 +27,7 @@ namespace PathSystemServer.Repository.UnitOfWork
             Owners = ownerRepository;
             OwnerRefreshTokens = ownerRefreshTokenRepository;
             Routes = routeRepository;
+            PathPoints = pathPointRepository;
         }
 
         public int Commit()

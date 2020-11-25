@@ -4,13 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using NetTopologySuite.Geometries;
 
-namespace PathSystemServer.Models
+namespace PathSystemServer.DTOs.Routing
 {
-    public class Route
+    public class PathPointDTO
     {
         public int Id { get; set; }
         public string Name { get; set; }
-        public Owner Owner { get; set; }
-        public ICollection<PathPoint> PathPoints { get; set; }
+        public double Longitude { get; set; }
+        public double Latitude { get; set; }
     }
 }

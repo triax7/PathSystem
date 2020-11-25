@@ -55,7 +55,9 @@ namespace PathSystemServer.Controllers
         {
             var refreshToken = Request.Cookies["refreshToken"];
             var requestAccessToken = Request.Cookies["accessToken"];
+
             if (refreshToken == null || requestAccessToken == null) return Unauthorized();
+            
             var accessToken = new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
             var tokens = _userService.UpdateAccessToken(accessToken, refreshToken);
 

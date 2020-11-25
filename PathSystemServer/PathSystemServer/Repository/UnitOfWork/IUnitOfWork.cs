@@ -8,6 +8,8 @@ namespace PathSystemServer.Repository.UnitOfWork
         IRefreshTokenRepository RefreshTokens { get; }
         IOwnerRepository Owners { get; }
         IOwnerRefreshTokenRepository OwnerRefreshTokens { get; }
+        IRouteRepository Routes { get; }
+        IPathPointRepository PathPoints { get; }
         int Commit();
         void Dispose();
     }

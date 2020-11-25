@@ -27,7 +27,7 @@ namespace PathSystemServer.Controllers
         }
 
         [HttpPost("Register")]
-        public IActionResult Register([FromBody] RegisterViewModel model)
+        public ActionResult<LoginSuccessViewModel> Register([FromBody] RegisterViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -51,7 +51,7 @@ namespace PathSystemServer.Controllers
         }
 
         [HttpPost("update-access-token")]
-        public IActionResult UpdateAccessToken()
+        public ActionResult<LoginSuccessViewModel> UpdateAccessToken()
         {
             var refreshToken = Request.Cookies["refreshToken"];
             var requestAccessToken = Request.Cookies["accessToken"];

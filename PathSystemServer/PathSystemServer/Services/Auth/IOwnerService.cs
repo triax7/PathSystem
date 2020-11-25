@@ -1,5 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
 using PathSystemServer.DTOs.Auth;
+using PathSystemServer.Models;
 
 namespace PathSystemServer.Services.Auth
 {
@@ -9,5 +10,6 @@ namespace PathSystemServer.Services.Auth
         LoginSuccessDTO Register(RegisterDTO dto);
         LoginSuccessDTO UpdateAccessToken(JwtSecurityToken accessToken, string refreshToken);
         void RevokeRefreshToken(string refreshToken);
+        Owner GetUserFromToken(JwtSecurityToken accessToken);
     }
 }

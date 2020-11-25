@@ -9,5 +9,6 @@ namespace PathSystemServer.Services.Auth
         LoginSuccessDTO Register(RegisterDTO dto);
         LoginSuccessDTO UpdateAccessToken(JwtSecurityToken accessToken, string refreshToken);
         void RevokeRefreshToken(string refreshToken);
+
     }
 }

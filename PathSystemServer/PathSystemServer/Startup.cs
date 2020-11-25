@@ -14,6 +14,7 @@ using PathSystemServer.Repository;
 using PathSystemServer.Repository.Interfaces;
 using PathSystemServer.Repository.UnitOfWork;
 using PathSystemServer.Services.Auth;
+using PathSystemServer.Services.Routing;
 
 namespace PathSystemServer
 {
@@ -96,6 +97,8 @@ namespace PathSystemServer
             services.AddScoped<IOwnerService, OwnerService>();
             services.AddScoped<IRouteRepository, RouteRepository>();
             services.AddScoped<IPathPointRepository, PathPointRepository>();
+            services.AddScoped<IRouteService, RouteService>();
+            services.AddScoped<IPathPointService, PathPointService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

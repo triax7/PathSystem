@@ -106,6 +106,7 @@ namespace PathSystemServer.Services.Auth
                 {
                     new Claim(ClaimTypes.Name, owner.Name),
                     new Claim(ClaimTypes.Email, owner.Email),
+                    new Claim(ClaimTypes.Role, "Owner")
                 }),
                 Expires = DateTime.UtcNow.AddSeconds(_jwtOptions.ExpiryTime),
                 SigningCredentials =
@@ -125,7 +126,7 @@ namespace PathSystemServer.Services.Auth
             return Convert.ToBase64String(randomBytes);
         }
 
-        private Owner GetUserFromToken(JwtSecurityToken accessToken)
+        public Owner GetUserFromToken(JwtSecurityToken accessToken)
         {
             var email = accessToken.Claims
                 .FirstOrDefault(c => c.Type == "email")?.Value;

@@ -67,6 +67,14 @@ namespace PathSystemServer.Controllers
             return _mapper.Map<List<PathPointViewModel>>(points);
         }
 
+        [HttpPost("optimize")]
+        public ActionResult<List<PathPointViewModel>> GetOptimizedRoute(GetOptimizedRouteViewModel model)
+        {
+            var points = _routeService.GetOptimizedRoute(model.RouteId, model.StartingPointId);
+
+            return _mapper.Map<List<PathPointViewModel>>(points);
+        }
+
         private JwtSecurityToken AccessToken()
         {
             var requestAccessToken = Request.Cookies["accessToken"];

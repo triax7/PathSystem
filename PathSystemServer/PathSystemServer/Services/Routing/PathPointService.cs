@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using NetTopologySuite.Geometries;
 using PathSystemServer.DTOs.Routing;
+using PathSystemServer.ErrorHandling.Exceptions;
 using PathSystemServer.Models;
 using PathSystemServer.Repository.UnitOfWork;
 using PathSystemServer.Services.Auth;
@@ -28,12 +29,11 @@ namespace PathSystemServer.Services.Routing
         public PathPointDTO AddPointToRoute(int routeId, PathPointDTO dto, JwtSecurityToken token)
         {
             var route = _unitOfWork.Routes.GetById(routeId);
-            if (route == null) throw new ApplicationException("Route does not exist");
+            if (route == null) throw new AppException("Route does not exist");
 
             var owner = _ownerService.GetUserFromToken(token);
-            if (owner == null) throw new ApplicationException("Invalid token");
 
-            if (route.Owner.Id != owner.Id) throw new ApplicationException("You are not the owner of this route");
+            if (route.Owner.Id != owner.Id) throw new AppException("You are not the owner of this route");
 
             var point = new PathPoint
             {

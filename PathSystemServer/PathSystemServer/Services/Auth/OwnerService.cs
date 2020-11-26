@@ -11,6 +11,7 @@ using System.Web.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PathSystemServer.DTOs.Auth;
+using PathSystemServer.ErrorHandling.Exceptions;
 using PathSystemServer.Models;
 using PathSystemServer.Repository;
 using PathSystemServer.Repository.Interfaces;
@@ -34,7 +35,7 @@ namespace PathSystemServer.Services.Auth
             var owner = _unitOfWork.Owners.GetAll().SingleOrDefault(u => u.Email == dto.Email);
 
             if (owner == null || !Crypto.VerifyHashedPassword(owner.PasswordHash, dto.Password))
-                throw new ApplicationException("Owner not found");
+                throw new AppException("Owner not found");
 
             var accessToken = GenerateAccessToken(owner);
             var refreshToken = GenerateRefreshToken();
@@ -49,7 +50,7 @@ namespace PathSystemServer.Services.Auth
         public LoginSuccessDTO Register(RegisterDTO dto)
         {
             if (_unitOfWork.Owners.GetAll(u => u.Email == dto.Email).SingleOrDefault() != null)
-                throw new ApplicationException("Owner already exists");
+                throw new AppException("Owner already exists");
 
             var owner = new Owner
             {
@@ -76,7 +77,7 @@ namespace PathSystemServer.Services.Auth
 
             if (owner == null)
             {
-                throw new ApplicationException("Owner not found");
+                throw new AppException("Owner not found");
             }
 
             var newAccessToken = GenerateAccessToken(owner);

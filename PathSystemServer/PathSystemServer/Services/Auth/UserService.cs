@@ -11,6 +11,7 @@ using System.Web.Helpers;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 using PathSystemServer.DTOs.Auth;
+using PathSystemServer.ErrorHandling.Exceptions;
 using PathSystemServer.Models;
 using PathSystemServer.Repository;
 using PathSystemServer.Repository.Interfaces;
@@ -34,7 +35,7 @@ namespace PathSystemServer.Services.Auth
             var user = _unitOfWork.Users.GetAll().SingleOrDefault(u => u.Email == dto.Email);
 
             if (user == null || !Crypto.VerifyHashedPassword(user.PasswordHash, dto.Password))
-                throw new ApplicationException("User not found");
+                throw new AppException("User not found");
 
             var accessToken = GenerateAccessToken(user);
             var refreshToken = GenerateRefreshToken();
@@ -50,7 +51,7 @@ namespace PathSystemServer.Services.Auth
         {
             if (_unitOfWork.Users.GetAll(u => u.Email == dto.Email).SingleOrDefault() != null)
             {
-                throw new ApplicationException("User already exists");
+                throw new AppException("User already exists");
             }
 
             var user = new User
@@ -78,7 +79,7 @@ namespace PathSystemServer.Services.Auth
 
             if (user == null)
             {
-                throw new ApplicationException("User not found");
+                throw new AppException("User not found");
             }
 
             var newAccessToken = GenerateAccessToken(user);

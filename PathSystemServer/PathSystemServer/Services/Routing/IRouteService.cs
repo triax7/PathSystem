@@ -10,5 +10,6 @@ namespace PathSystemServer.Services.Routing
         List<RouteDTO> GetOwnRoutes(JwtSecurityToken token);
         RouteDTO GetRouteById(int id);
         List<PathPointDTO> GetPointsByRouteId(int id);
+        List<PathPointDTO> GetOptimizedRoute(int id, int startingPointId);
     }
 }

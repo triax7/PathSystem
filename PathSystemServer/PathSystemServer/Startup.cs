@@ -10,6 +10,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.IdentityModel.Tokens;
+using PathSystemServer.ErrorHandling;
 using PathSystemServer.Repository;
 using PathSystemServer.Repository.Interfaces;
 using PathSystemServer.Repository.UnitOfWork;
@@ -125,6 +126,8 @@ namespace PathSystemServer
 
             app.UseAuthentication();
             app.UseAuthorization();
+
+            app.UseMiddleware<ErrorHandlerMiddleware>();
 
             app.UseEndpoints(endpoints => { endpoints.MapControllers(); });
         }

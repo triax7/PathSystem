@@ -1,5 +1,6 @@
 import { makeAutoObservable } from 'mobx'
-import { emailExists, register } from '../../apis/Owners'
+import { current, emailExists, register } from '../../apis/Owners'
+import globalStore from '../../stores/GlobalStore'
 
 export default class Service {
     state = {}
@@ -18,6 +19,7 @@ export default class Service {
         if(data.errorMessage) {
             alert(data.errorMessage)
         }
+        globalStore.user = await current()
     }
 
     validateName = async (value) => {

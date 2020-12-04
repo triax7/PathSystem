@@ -11,5 +11,6 @@ namespace PathSystemServer.Services.Auth
         LoginSuccessDTO UpdateAccessToken(JwtSecurityToken accessToken, string refreshToken);
         void RevokeRefreshToken(string refreshToken);
         Owner GetUserFromToken(JwtSecurityToken accessToken);
+        bool EmailExists(string email);
     }
 }

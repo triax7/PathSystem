@@ -99,6 +99,10 @@ namespace PathSystemServer.Services.Auth
 
             _unitOfWork.Commit();
         }
+        public bool EmailExists(string email)
+        {
+            return _unitOfWork.Users.GetAll(o => o.Email == email).SingleOrDefault() != null;
+        }
 
         private string GenerateAccessToken(User user)
         {

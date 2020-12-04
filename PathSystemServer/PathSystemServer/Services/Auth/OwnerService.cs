@@ -97,6 +97,12 @@ namespace PathSystemServer.Services.Auth
 
             _unitOfWork.Commit();
         }
+
+        public bool EmailExists(string email)
+        {
+            return _unitOfWork.Owners.GetAll(o => o.Email == email).SingleOrDefault() != null;
+        }
+
         private string GenerateAccessToken(Owner owner)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

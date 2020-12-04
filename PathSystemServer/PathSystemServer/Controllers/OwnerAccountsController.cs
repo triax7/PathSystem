@@ -1,15 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Threading.Tasks;
-using AutoMapper;
+﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 using PathSystemServer.DTOs.Auth;
 using PathSystemServer.Services.Auth;
 using PathSystemServer.ViewModels.Auth;
+using System;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace PathSystemServer.Controllers
 {
@@ -75,6 +72,23 @@ namespace PathSystemServer.Controllers
             _ownerService.RevokeRefreshToken(refreshToken);
 
             return Ok();
+        }
+
+        [HttpPost("exists")]
+        public ActionResult<bool> EmailExists(ExistsViewModel model)
+        {
+            return Ok(_ownerService.EmailExists(model.Email));
+        }
+
+        [Authorize]
+        [HttpGet("current")]
+        public ActionResult<CurrentUserViewModel> GetCurrentUser()
+        {
+            var requestAccessToken = Request.Cookies["accessToken"];
+            var accessToken = new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
+            var owner = _ownerService.GetUserFromToken(accessToken);
+
+            return Ok(_mapper.Map<CurrentUserViewModel>(owner));
         }
 
         private void SetTokenCookie(string accessToken, string refreshToken)

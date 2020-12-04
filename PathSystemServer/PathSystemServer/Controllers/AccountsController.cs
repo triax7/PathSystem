@@ -80,6 +80,23 @@ namespace PathSystemServer.Controllers
             return Ok();
         }
 
+        [HttpPost("exists")]
+        public ActionResult<bool> EmailExists(ExistsViewModel model)
+        {
+            return Ok(_userService.EmailExists(model.Email));
+        }
+
+        [Authorize]
+        [HttpGet("current")]
+        public ActionResult<CurrentUserViewModel> GetCurrentUser()
+        {
+            var requestAccessToken = Request.Cookies["accessToken"];
+            var accessToken = new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
+            var owner = _userService.GetUserFromToken(accessToken);
+
+            return Ok(_mapper.Map<CurrentUserViewModel>(owner));
+        }
+
         private void SetTokenCookie(string accessToken, string refreshToken)
         {
             var cookieOptions = new CookieOptions

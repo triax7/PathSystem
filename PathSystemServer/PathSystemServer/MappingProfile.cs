@@ -26,6 +26,8 @@ namespace PathSystemServer
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Point.X))
                 .ForMember(dst => dst.Latitude, opt => opt.MapFrom(src => src.Point.Y));
             CreateMap<PathPointViewModel, PathPointDTO>().ReverseMap();
+            CreateMap<Owner, CurrentUserViewModel>();
+            CreateMap<User, CurrentUserViewModel>();
         }
     }
 }

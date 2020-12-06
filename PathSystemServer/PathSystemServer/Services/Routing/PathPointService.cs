@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using NetTopologySuite.Geometries;
 using PathSystemServer.DTOs.Routing;
 using PathSystemServer.ErrorHandling.Exceptions;
@@ -46,6 +48,16 @@ namespace PathSystemServer.Services.Routing
 
             dto.Id = point.Id;
             return dto;
+        }
+
+        public void DeletePoint(int pointId, JwtSecurityToken token)
+        {
+            var owner = _ownerService.GetUserFromToken(token);
+            var point = _unitOfWork.PathPoints.GetAll(p => p.Id == pointId).Include(p => p.Route).SingleOrDefault();
+            if(point == null || point.Route.Owner.Id != owner.Id) throw new AppException("Point does not exist");
+            
+            _unitOfWork.PathPoints.Delete(point);
+            _unitOfWork.Commit();
         }
     }
 }

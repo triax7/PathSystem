@@ -1,6 +1,7 @@
 import { makeAutoObservable } from 'mobx'
 import { current, login } from '../../apis/Owners'
 import globalStore from '../../stores/GlobalStore'
+import { history } from '../../stores/RouterStore'
 
 export default class Service {
   state = {}
@@ -19,6 +20,7 @@ export default class Service {
       alert(data.errorMessage)
     }
     globalStore.user = await current()
+    history.push('/routes')
   }
 
   validateEmail = async (value) => {

@@ -6,5 +6,6 @@ namespace PathSystemServer.Services.Routing
     public interface IPathPointService
     {
         PathPointDTO AddPointToRoute(int routeId, PathPointDTO dto, JwtSecurityToken token);
+        void DeletePoint(int pointId, JwtSecurityToken token);
     }
 }

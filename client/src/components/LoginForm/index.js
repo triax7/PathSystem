@@ -50,8 +50,11 @@ const LoginForm = observer(
                           label={'Password'}
                         />
                       </Grid>
-                      <Button type={'submit'} fullWidth
-                              variant={'contained'}>Login</Button>
+                      <Box mt={2}>
+                        <Button type={'submit'} fullWidth variant={'contained'}>
+                          Login
+                        </Button>
+                      </Box>
                     </Form>
                   </Formik>
                 </Box>

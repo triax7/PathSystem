@@ -60,8 +60,11 @@ const RegistrationForm = observer(
                           validate={validatePassword}
                         />
                       </Grid>
-                      <Button type={'submit'} fullWidth
-                              variant={'contained'}>Register</Button>
+                      <Box mt={2}>
+                        <Button type={'submit'} fullWidth variant={'contained'}>
+                          Register
+                        </Button>
+                      </Box>
                     </Form>
                   </Formik>
                 </Box>

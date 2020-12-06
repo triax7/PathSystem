@@ -1,17 +1,18 @@
 import { makeAutoObservable } from 'mobx'
 import { current, emailExists, register } from '../../apis/Owners'
 import globalStore from '../../stores/GlobalStore'
+import { history } from '../../stores/RouterStore'
 
 export default class Service {
     state = {}
 
     constructor() {
-        makeAutoObservable(this)
         this.state.initialValues = {
             name: '',
             email: '',
             password: ''
         }
+        makeAutoObservable(this)
     }
 
     handleSubmit = async (values) => {
@@ -20,6 +21,7 @@ export default class Service {
             alert(data.errorMessage)
         }
         globalStore.user = await current()
+        history.push('/routes')
     }
 
     validateName = async (value) => {

@@ -1,7 +1,7 @@
 import {makeAutoObservable} from 'mobx'
 
 class GlobalStore {
-  user
+  user = {}
   constructor() {
     makeAutoObservable(this)
   }

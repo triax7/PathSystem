@@ -39,7 +39,7 @@ namespace PathSystemServer.Controllers
             return _mapper.Map<PathPointViewModel>(point);
         }
 
-        [HttpPost("Delete/{id}")]
+        [HttpDelete("Delete/{id}")]
         public IActionResult DeletePoint([FromRoute] int id)
         {
             _pathPointService.DeletePoint(id, AccessToken());

@@ -11,7 +11,7 @@ async function createPoint(point) {
 }
 
 async function deletePoint(pointId) {
-  return api.post(`delete/${pointId}`)
+  return api.delete(`delete/${pointId}`)
 }
 
 export {createPoint, deletePoint}

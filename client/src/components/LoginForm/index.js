@@ -44,6 +44,7 @@ const LoginForm = observer(
                           validate={validateEmail}
                         />
                         <Field
+                          type={'password'}
                           component={TextField}
                           fullWidth
                           name={'password'}

@@ -7,13 +7,11 @@ const api = axios.create({
 })
 
 async function createPoint(point) {
-  console.log(point)
-  return api.post('create', {
-    routeId: point.routeId,
-    name: point.name,
-    longitude: point.longitude,
-    latitude: point.latitude
-  }).then(res => res.data)
+  return api.post('create', point).then(res => res.data)
 }
 
-export {createPoint}
+async function deletePoint(pointId) {
+  return api.post(`delete/${pointId}`)
+}
+
+export {createPoint, deletePoint}

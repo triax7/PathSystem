@@ -5,6 +5,7 @@ using System.Net;
 using System.Text.Json;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using PathSystemServer.ErrorHandling.Exceptions;
 
 namespace PathSystemServer.ErrorHandling
@@ -18,7 +19,7 @@ namespace PathSystemServer.ErrorHandling
             _next = next;
         }
 
-        public async Task Invoke(HttpContext context)
+        public async Task Invoke(HttpContext context, ILogger<ErrorHandlerMiddleware> logger)
         {
             try
             {
@@ -34,6 +35,7 @@ namespace PathSystemServer.ErrorHandling
                     case AppException e:
                         // custom application error
                         response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        logger.LogWarning($"AppException: {error?.Message}");
                         break;
                     default:
                         // unhandled error

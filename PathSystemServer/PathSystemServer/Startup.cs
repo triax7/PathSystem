@@ -38,12 +38,12 @@ namespace PathSystemServer
                     x => x.UseNetTopologySuite()));
 
             var mapperConfig = new MapperConfiguration(mc => { mc.AddProfile(new MappingProfile()); });
-
             IMapper mapper = mapperConfig.CreateMapper();
             services.AddSingleton(mapper);
 
             var jwtSection = Configuration.GetSection("JwtOptions");
             services.Configure<JwtOptions>(jwtSection);
+
             var jwtOptions = jwtSection.Get<JwtOptions>();
             var key = Encoding.ASCII.GetBytes(jwtOptions.SecretKey);
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -89,17 +89,20 @@ namespace PathSystemServer
 
             services.AddSwaggerGen();
 
-            services.AddScoped<IUserService, UserService>();
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
             services.AddScoped<IOwnerRepository, OwnerRepository>();
-            services.AddScoped<IUnitOfWork, UnitOfWork>();
             services.AddScoped<IOwnerRefreshTokenRepository, OwnerRefreshTokenRepository>();
-            services.AddScoped<IOwnerService, OwnerService>();
             services.AddScoped<IRouteRepository, RouteRepository>();
             services.AddScoped<IPathPointRepository, PathPointRepository>();
-            services.AddScoped<IRouteService, RouteService>();
-            services.AddScoped<IPathPointService, PathPointService>();
+
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+            services.AddTransient<IUserService, UserService>();
+            services.AddTransient<IRouteService, RouteService>();
+            services.AddTransient<IPathPointService, PathPointService>();
+            services.AddTransient<IOwnerService, OwnerService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

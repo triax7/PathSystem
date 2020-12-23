@@ -7,6 +7,7 @@ using PathSystemServer.Services.Auth;
 using PathSystemServer.ViewModels.Auth;
 using System;
 using System.IdentityModel.Tokens.Jwt;
+using PathSystemServer.Extensions;
 
 namespace PathSystemServer.Controllers
 {
@@ -85,9 +86,7 @@ namespace PathSystemServer.Controllers
         [HttpGet("current")]
         public ActionResult<CurrentUserViewModel> GetCurrentUser()
         {
-            var requestAccessToken = Request.Cookies["accessToken"];
-            var accessToken = new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
-            var owner = _ownerService.GetUserFromToken(accessToken);
+            var owner = _ownerService.GetUserFromToken(Request.GetAccessToken());
 
             return Ok(_mapper.Map<CurrentUserViewModel>(owner));
         }

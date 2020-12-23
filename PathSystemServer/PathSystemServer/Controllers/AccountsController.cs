@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using PathSystemServer.DTOs.Auth;
+using PathSystemServer.Extensions;
 using PathSystemServer.Services.Auth;
 using PathSystemServer.ViewModels.Auth;
 
@@ -90,9 +91,7 @@ namespace PathSystemServer.Controllers
         [HttpGet("current")]
         public ActionResult<CurrentUserViewModel> GetCurrentUser()
         {
-            var requestAccessToken = Request.Cookies["accessToken"];
-            var accessToken = new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
-            var owner = _userService.GetUserFromToken(accessToken);
+            var owner = _userService.GetUserFromToken(Request.GetAccessToken());
 
             return Ok(_mapper.Map<CurrentUserViewModel>(owner));
         }

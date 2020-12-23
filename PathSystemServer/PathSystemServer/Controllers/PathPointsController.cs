@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using PathSystemServer.DTOs.Routing;
+using PathSystemServer.Extensions;
 using PathSystemServer.Services.Routing;
 using PathSystemServer.ViewModels.Routing;
 
@@ -34,7 +35,7 @@ namespace PathSystemServer.Controllers
                 return BadRequest(ModelState);
 
             var point = _pathPointService.AddPointToRoute(model.RouteId, _mapper.Map<PathPointDTO>(model),
-                AccessToken());
+                Request.GetAccessToken());
 
             return _mapper.Map<PathPointViewModel>(point);
         }
@@ -42,14 +43,8 @@ namespace PathSystemServer.Controllers
         [HttpDelete("Delete/{id}")]
         public IActionResult DeletePoint([FromRoute] int id)
         {
-            _pathPointService.DeletePoint(id, AccessToken());
+            _pathPointService.DeletePoint(id, Request.GetAccessToken());
             return Ok();
-        }
-
-        private JwtSecurityToken AccessToken()
-        {
-            var requestAccessToken = Request.Cookies["accessToken"];
-            return new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
         }
     }
 }

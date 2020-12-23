@@ -9,6 +9,7 @@ using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Components;
 using PathSystemServer.DTOs.Routing;
+using PathSystemServer.Extensions;
 using PathSystemServer.Models;
 using PathSystemServer.Services.Routing;
 using PathSystemServer.ViewModels.Routing;
@@ -36,7 +37,7 @@ namespace PathSystemServer.Controllers
                 return BadRequest(ModelState);
 
 
-            var route = _routeService.CreateRoute(_mapper.Map<RouteDTO>(model), AccessToken());
+            var route = _routeService.CreateRoute(_mapper.Map<RouteDTO>(model), Request.GetAccessToken());
 
             if (route == null) return BadRequest("Something went wrong");
 
@@ -46,7 +47,7 @@ namespace PathSystemServer.Controllers
         [HttpGet]
         public ActionResult<List<RouteViewModel>> Get()
         {
-            var routes = _routeService.GetOwnRoutes(AccessToken());
+            var routes = _routeService.GetOwnRoutes(Request.GetAccessToken());
 
             return _mapper.Map<List<RouteViewModel>>(routes);
         }
@@ -73,12 +74,6 @@ namespace PathSystemServer.Controllers
             var points = _routeService.GetOptimizedRoute(model.RouteId, model.StartingPointId);
 
             return _mapper.Map<List<PathPointViewModel>>(points);
-        }
-
-        private JwtSecurityToken AccessToken()
-        {
-            var requestAccessToken = Request.Cookies["accessToken"];
-            return new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
         }
     }
 }

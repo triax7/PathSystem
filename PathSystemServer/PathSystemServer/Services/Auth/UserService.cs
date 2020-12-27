@@ -78,14 +78,15 @@ namespace PathSystemServer.Services.Auth
             var user = GetUserFromToken(accessToken);
 
             if (user == null)
-            {
                 throw new AppException("User not found");
-            }
+
+            if (!_unitOfWork.RefreshTokens.GetAll().Any(t => t.Token == refreshToken))
+                throw new AppException("Invalid refresh token");
 
             var newAccessToken = GenerateAccessToken(user);
             var newRefreshToken = GenerateRefreshToken();
 
-            _unitOfWork.RefreshTokens.Add(new RefreshToken { Token = newRefreshToken, User = user });
+            _unitOfWork.RefreshTokens.Add(new RefreshToken {Token = newRefreshToken, User = user});
 
             _unitOfWork.Commit();
 
@@ -99,6 +100,7 @@ namespace PathSystemServer.Services.Auth
 
             _unitOfWork.Commit();
         }
+
         public bool EmailExists(string email)
         {
             return _unitOfWork.Users.GetAll(o => o.Email == email).SingleOrDefault() != null;
@@ -114,7 +116,7 @@ namespace PathSystemServer.Services.Auth
                 {
                     new Claim(ClaimTypes.Name, user.Name),
                     new Claim(ClaimTypes.Email, user.Email),
-                    new Claim(ClaimTypes.Role, "User") 
+                    new Claim(ClaimTypes.Role, "User")
                 }),
                 Expires = DateTime.UtcNow.AddSeconds(_jwtOptions.ExpiryTime),
                 SigningCredentials =

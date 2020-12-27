@@ -105,6 +105,10 @@ namespace PathSystemServer.Controllers
             };
             Response.Cookies.Append("accessToken", accessToken, cookieOptions);
             Response.Cookies.Append("refreshToken", refreshToken, cookieOptions);
+
+            //revoke current refresh token when we get a new one
+            if (Request.Cookies.TryGetValue("refreshToken", out var currentRefreshToken))
+                _userService.RevokeRefreshToken(currentRefreshToken);
         }
     }
 }

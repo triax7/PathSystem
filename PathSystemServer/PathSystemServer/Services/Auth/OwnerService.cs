@@ -40,7 +40,7 @@ namespace PathSystemServer.Services.Auth
             var accessToken = GenerateAccessToken(owner);
             var refreshToken = GenerateRefreshToken();
 
-            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken { Token = refreshToken, Owner = owner });
+            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken {Token = refreshToken, Owner = owner});
 
             _unitOfWork.Commit();
 
@@ -64,7 +64,7 @@ namespace PathSystemServer.Services.Auth
             var accessToken = GenerateAccessToken(owner);
             var refreshToken = GenerateRefreshToken();
 
-            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken { Token = refreshToken, Owner = owner });
+            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken {Token = refreshToken, Owner = owner});
 
             _unitOfWork.Commit();
 
@@ -76,14 +76,15 @@ namespace PathSystemServer.Services.Auth
             var owner = GetUserFromToken(accessToken);
 
             if (owner == null)
-            {
                 throw new AppException("Owner not found");
-            }
+
+            if (!_unitOfWork.OwnerRefreshTokens.GetAll().Any(t => t.Token == refreshToken))
+                throw new AppException("Invalid refresh token");
 
             var newAccessToken = GenerateAccessToken(owner);
             var newRefreshToken = GenerateRefreshToken();
 
-            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken { Token = newRefreshToken, Owner = owner });
+            _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken {Token = newRefreshToken, Owner = owner});
 
             _unitOfWork.Commit();
 

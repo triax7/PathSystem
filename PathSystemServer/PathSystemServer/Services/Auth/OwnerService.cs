@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -30,7 +29,7 @@ namespace PathSystemServer.Services.Auth
             _unitOfWork = unitOfWork;
         }
 
-        public LoginSuccessDTO Login(LoginDTO dto)
+        public UserDTO Login(LoginDTO dto)
         {
             var owner = _unitOfWork.Owners.GetAll().SingleOrDefault(u => u.Email == dto.Email);
 
@@ -44,10 +43,10 @@ namespace PathSystemServer.Services.Auth
 
             _unitOfWork.Commit();
 
-            return new LoginSuccessDTO(owner.Name, accessToken, refreshToken);
+            return new UserDTO(owner.Id, owner.Name, owner.Email, accessToken, refreshToken);
         }
 
-        public LoginSuccessDTO Register(RegisterDTO dto)
+        public UserDTO Register(RegisterDTO dto)
         {
             if (_unitOfWork.Owners.GetAll(u => u.Email == dto.Email).SingleOrDefault() != null)
                 throw new AppException("Owner already exists");
@@ -68,10 +67,10 @@ namespace PathSystemServer.Services.Auth
 
             _unitOfWork.Commit();
 
-            return new LoginSuccessDTO(owner.Name, accessToken, refreshToken);
+            return new UserDTO(owner.Id, owner.Name, owner.Email, accessToken, refreshToken);
         }
 
-        public LoginSuccessDTO UpdateAccessToken(JwtSecurityToken accessToken, string refreshToken)
+        public UserDTO UpdateAccessToken(JwtSecurityToken accessToken, string refreshToken)
         {
             var owner = GetUserFromToken(accessToken);
 
@@ -88,7 +87,7 @@ namespace PathSystemServer.Services.Auth
 
             _unitOfWork.Commit();
 
-            return new LoginSuccessDTO(owner.Name, newAccessToken, newRefreshToken);
+            return new UserDTO(owner.Id, owner.Name, owner.Email, newAccessToken, newRefreshToken);
         }
 
         public void RevokeRefreshToken(string refreshToken)

@@ -25,7 +25,7 @@ namespace PathSystemServer.Controllers
         }
 
         [HttpPost("Register")]
-        public ActionResult<LoginSuccessViewModel> Register([FromBody] RegisterViewModel model)
+        public ActionResult<CurrentUserViewModel> Register([FromBody] RegisterViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -33,11 +33,11 @@ namespace PathSystemServer.Controllers
             var reg = _ownerService.Register(_mapper.Map<RegisterDTO>(model));
             SetTokenCookie(reg.AccessToken, reg.RefreshToken);
 
-            return Ok(_mapper.Map<LoginSuccessViewModel>(reg));
+            return Ok(_mapper.Map<CurrentUserViewModel>(reg));
         }
 
         [HttpPost("Login")]
-        public ActionResult<LoginSuccessViewModel> Login([FromBody] LoginViewModel model)
+        public ActionResult<CurrentUserViewModel> Login([FromBody] LoginViewModel model)
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
@@ -45,21 +45,24 @@ namespace PathSystemServer.Controllers
             var log = _ownerService.Login(_mapper.Map<LoginDTO>(model));
             SetTokenCookie(log.AccessToken, log.RefreshToken);
 
-            return Ok(_mapper.Map<LoginSuccessViewModel>(log));
+            return Ok(_mapper.Map<CurrentUserViewModel>(log));
         }
 
         [HttpPost("update-access-token")]
-        public ActionResult<LoginSuccessViewModel> UpdateAccessToken()
+        public ActionResult<CurrentUserViewModel> UpdateAccessToken()
         {
-            var refreshToken = Request.Cookies["refreshToken"];
-            var requestAccessToken = Request.Cookies["accessToken"];
-            if (refreshToken == null || requestAccessToken == null) return Unauthorized("No tokens provided");
+            if (!Request.Cookies.TryGetValue("accessToken", out var requestAccessToken) ||
+                  !Request.Cookies.TryGetValue("refreshToken", out var requestRefreshToken))
+            {
+                return BadRequest("No tokens provided");
+            }
+
             var accessToken = new JwtSecurityTokenHandler().ReadToken(requestAccessToken) as JwtSecurityToken;
-            var tokens = _ownerService.UpdateAccessToken(accessToken, refreshToken);
+            var tokens = _ownerService.UpdateAccessToken(accessToken, requestRefreshToken);
 
             SetTokenCookie(tokens.AccessToken, tokens.RefreshToken);
 
-            return Ok(_mapper.Map<LoginSuccessViewModel>(tokens));
+            return Ok(_mapper.Map<CurrentUserViewModel>(tokens));
         }
 
         [Authorize]

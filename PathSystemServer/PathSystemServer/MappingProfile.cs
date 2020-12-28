@@ -16,7 +16,7 @@ namespace PathSystemServer
         public MappingProfile()
         {
             CreateMap<RegisterViewModel, RegisterDTO>();
-            CreateMap<LoginSuccessDTO, LoginSuccessViewModel>();
+            CreateMap<UserDTO, CurrentUserViewModel>();
             CreateMap<LoginViewModel, LoginDTO>();
             CreateMap<RouteCreateViewModel, RouteDTO>().ReverseMap();
             CreateMap<RouteViewModel, RouteDTO>().ReverseMap();

@@ -15,6 +15,7 @@ using PathSystemServer.Models;
 using PathSystemServer.Repository;
 using PathSystemServer.Repository.Interfaces;
 using PathSystemServer.Repository.UnitOfWork;
+using PathSystemServer.ViewModels.Auth;
 
 namespace PathSystemServer.Services.Auth
 {
@@ -29,11 +30,11 @@ namespace PathSystemServer.Services.Auth
             _unitOfWork = unitOfWork;
         }
 
-        public UserDTO Login(LoginDTO dto)
+        public UserDTO Login(LoginViewModel model)
         {
-            var owner = _unitOfWork.Owners.GetAll().SingleOrDefault(u => u.Email == dto.Email);
+            var owner = _unitOfWork.Owners.GetAll().SingleOrDefault(u => u.Email == model.Email);
 
-            if (owner == null || !Crypto.VerifyHashedPassword(owner.PasswordHash, dto.Password))
+            if (owner == null || !Crypto.VerifyHashedPassword(owner.PasswordHash, model.Password))
                 throw new AppException("Owner not found");
 
             var accessToken = GenerateAccessToken(owner);
@@ -46,7 +47,7 @@ namespace PathSystemServer.Services.Auth
             return new UserDTO(owner.Id, owner.Name, owner.Email, accessToken, refreshToken);
         }
 
-        public UserDTO Register(RegisterDTO dto)
+        public UserDTO Register(RegisterViewModel dto)
         {
             if (_unitOfWork.Owners.GetAll(u => u.Email == dto.Email).SingleOrDefault() != null)
                 throw new AppException("Owner already exists");
@@ -93,6 +94,8 @@ namespace PathSystemServer.Services.Auth
         public void RevokeRefreshToken(string refreshToken)
         {
             var token = _unitOfWork.OwnerRefreshTokens.GetAll().FirstOrDefault(t => t.Token == refreshToken);
+            if (token == null) return;
+            
             _unitOfWork.OwnerRefreshTokens.Delete(token);
 
             _unitOfWork.Commit();

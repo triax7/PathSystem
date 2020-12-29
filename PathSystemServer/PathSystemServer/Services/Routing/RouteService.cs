@@ -10,6 +10,7 @@ using PathSystemServer.ErrorHandling.Exceptions;
 using PathSystemServer.Models;
 using PathSystemServer.Repository.UnitOfWork;
 using PathSystemServer.Services.Auth;
+using PathSystemServer.ViewModels.Routing;
 
 namespace PathSystemServer.Services.Routing
 {
@@ -26,35 +27,33 @@ namespace PathSystemServer.Services.Routing
             _mapper = mapper;
         }
 
-        public RouteDTO CreateRoute(RouteDTO dto, JwtSecurityToken token)
+        public Route CreateRoute(RouteCreateViewModel model, JwtSecurityToken token)
         {
             var owner = _ownerService.GetUserFromToken(token);
 
-            Route route = new Route {Name = dto.Name, Owner = owner};
+            Route route = new Route {Name = model.Name, Owner = owner};
             _unitOfWork.Routes.Add(route);
 
             _unitOfWork.Commit();
 
-            dto.Id = route.Id;
-
-            return dto;
+            return route;
         }
 
-        public List<RouteDTO> GetOwnRoutes(JwtSecurityToken token)
+        public List<Route> GetOwnRoutes(JwtSecurityToken token)
         {
             var owner = _ownerService.GetUserFromToken(token);
 
             var routes = _unitOfWork.Routes.GetAll(r => r.Owner.Id == owner.Id).ToList();
 
-            return _mapper.Map<List<RouteDTO>>(routes);
+            return routes;
         }
 
-        public RouteDTO GetRouteById(int id)
+        public Route GetRouteById(int id)
         {
             var route = _unitOfWork.Routes.GetById(id);
             if (route == null) throw new AppException("Route does not exist");
 
-            return _mapper.Map<RouteDTO>(route);
+            return route;
         }
 
         public List<PathPointDTO> GetPointsByRouteId(int id)

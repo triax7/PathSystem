@@ -15,6 +15,7 @@ using PathSystemServer.Models;
 using PathSystemServer.Repository;
 using PathSystemServer.Repository.Interfaces;
 using PathSystemServer.Repository.UnitOfWork;
+using PathSystemServer.ViewModels.Auth;
 
 namespace PathSystemServer.Services.Auth
 {
@@ -29,11 +30,11 @@ namespace PathSystemServer.Services.Auth
             _unitOfWork = unitOfWork;
         }
 
-        public UserDTO Login(LoginDTO dto)
+        public UserDTO Login(LoginViewModel model)
         {
-            var user = _unitOfWork.Users.GetAll().SingleOrDefault(u => u.Email == dto.Email);
+            var user = _unitOfWork.Users.GetAll().SingleOrDefault(u => u.Email == model.Email);
 
-            if (user == null || !Crypto.VerifyHashedPassword(user.PasswordHash, dto.Password))
+            if (user == null || !Crypto.VerifyHashedPassword(user.PasswordHash, model.Password))
                 throw new AppException("User not found");
 
             var accessToken = GenerateAccessToken(user);
@@ -46,7 +47,7 @@ namespace PathSystemServer.Services.Auth
             return new UserDTO(user.Id, user.Name, user.Email, accessToken, refreshToken);
         }
 
-        public UserDTO Register(RegisterDTO dto)
+        public UserDTO Register(RegisterViewModel dto)
         {
             if (_unitOfWork.Users.GetAll(u => u.Email == dto.Email).SingleOrDefault() != null)
             {

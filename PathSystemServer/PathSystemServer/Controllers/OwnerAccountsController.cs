@@ -30,7 +30,7 @@ namespace PathSystemServer.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var reg = _ownerService.Register(_mapper.Map<RegisterDTO>(model));
+            var reg = _ownerService.Register(model);
             SetTokenCookie(reg.AccessToken, reg.RefreshToken);
 
             return Ok(_mapper.Map<CurrentUserViewModel>(reg));
@@ -42,7 +42,7 @@ namespace PathSystemServer.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            var log = _ownerService.Login(_mapper.Map<LoginDTO>(model));
+            var log = _ownerService.Login(model);
             SetTokenCookie(log.AccessToken, log.RefreshToken);
 
             return Ok(_mapper.Map<CurrentUserViewModel>(log));
@@ -69,12 +69,11 @@ namespace PathSystemServer.Controllers
         [HttpPost("logout")]
         public IActionResult RevokeRefreshToken()
         {
-            var refreshToken = Request.Cookies["refreshToken"];
+            if (Request.Cookies.TryGetValue("refreshToken", out var refreshToken))
+                _ownerService.RevokeRefreshToken(refreshToken);
 
             Response.Cookies.Delete("accessToken");
             Response.Cookies.Delete("refreshToken");
-
-            _ownerService.RevokeRefreshToken(refreshToken);
 
             return Ok();
         }

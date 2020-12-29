@@ -37,7 +37,7 @@ namespace PathSystemServer.Controllers
                 return BadRequest(ModelState);
 
 
-            var route = _routeService.CreateRoute(_mapper.Map<RouteDTO>(model), Request.GetAccessToken());
+            var route = _routeService.CreateRoute(model, Request.GetAccessToken());
 
             if (route == null) return BadRequest("Something went wrong");
 

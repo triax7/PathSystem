@@ -15,12 +15,8 @@ namespace PathSystemServer
     {
         public MappingProfile()
         {
-            CreateMap<RegisterViewModel, RegisterDTO>();
             CreateMap<UserDTO, CurrentUserViewModel>();
-            CreateMap<LoginViewModel, LoginDTO>();
-            CreateMap<RouteCreateViewModel, RouteDTO>().ReverseMap();
-            CreateMap<RouteViewModel, RouteDTO>().ReverseMap();
-            CreateMap<Route, RouteDTO>();
+            CreateMap<Route, RouteViewModel>();
             CreateMap<AddPointViewModel, PathPointDTO>().ReverseMap();
             CreateMap<PathPoint, PathPointDTO>()
                 .ForMember(dst => dst.Longitude, opt => opt.MapFrom(src => src.Point.X))

@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using PathSystem.BLL.Abstractions;
@@ -21,7 +22,7 @@ namespace PathSystem.BLL.Queries.Auth.Owners
         public Task<UserDTO> Handle(CurrentOwnerQuery request, CancellationToken cancellationToken)
         {
             var owner = _unitOfWork.Owners.GetById(request.UserId);
-            if (owner == null) throw new AppException("Owner not found");
+            if (owner == null) throw new AppException("Owner not found", HttpStatusCode.NotFound);
 
             return Task.FromResult(new UserDTO(owner.Id, owner.Name, owner.Email));
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,16 +41,16 @@ namespace PathSystem.BLL.Commands.Auth.Owners
         {
             var accessToken = new JwtSecurityTokenHandler().ReadToken(request.AccessToken) as JwtSecurityToken;
             if (accessToken == null)
-                throw new AppException("Invalid access token");
+                throw new AppException("Invalid access token", HttpStatusCode.Unauthorized);
             
             var userId = Convert.ToInt32(accessToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value);
             var owner = _unitOfWork.Owners.GetById(userId);
 
             if (owner == null)
-                throw new AppException("Owner not found");
+                throw new AppException("Owner not found", HttpStatusCode.NotFound);
 
             if (!_unitOfWork.OwnerRefreshTokens.GetAll().Any(t => t.Token == request.RefreshToken))
-                throw new AppException("Invalid refresh token");
+                throw new AppException("Invalid refresh token", HttpStatusCode.Unauthorized);
 
             var newAccessToken = _tokenService.GenerateAccessToken(owner);
             var newRefreshToken = _tokenService.GenerateRefreshToken();

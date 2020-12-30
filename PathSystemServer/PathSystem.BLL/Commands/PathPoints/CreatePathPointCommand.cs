@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ namespace PathSystem.BLL.Commands.PathPoints
             var route = _unitOfWork.Routes.GetAll()
                 .Include(r => r.Owner).SingleOrDefault(r => r.Id == request.RouteId);
             if (route == null || route.Owner.Id != request.UserId)
-                throw new AppException("Route does not exist or does not belong to you");
+                throw new AppException("Route does not exist", HttpStatusCode.NotFound);
 
             var point = new PathPoint
             {

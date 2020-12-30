@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,7 +43,7 @@ namespace PathSystem.BLL.Queries.PathPoints
                 .SingleOrDefault(r => r.Id == request.RouteId);
 
             if (route == null)
-                throw new AppException("Route does not exist");
+                throw new AppException("Route does not exist", HttpStatusCode.NotFound);
 
             return Task.FromResult(_mapper.Map<IEnumerable<PathPointDTO>>(route.PathPoints.ToList()));
         }

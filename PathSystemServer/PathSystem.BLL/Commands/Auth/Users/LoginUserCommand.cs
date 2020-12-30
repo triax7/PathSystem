@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Helpers;
@@ -36,7 +37,7 @@ namespace PathSystem.BLL.Commands.Auth.Users
             var user = _unitOfWork.Users.GetAll().SingleOrDefault(u => u.Email == request.Email);
 
             if (user == null || !Crypto.VerifyHashedPassword(user.PasswordHash, request.Password))
-                throw new AppException("User not found");
+                throw new AppException("User not found", HttpStatusCode.NotFound);
 
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -36,13 +37,13 @@ namespace PathSystem.BLL.Queries.Routes
         public Task<IEnumerable<PathPointDTO>> Handle(GetOptimizedRouteQuery request, CancellationToken cancellationToken)
         {
             if (_unitOfWork.Routes.GetById(request.RouteId) == null)
-                throw new AppException("Route does not exist");
+                throw new AppException("Route does not exist", HttpStatusCode.NotFound);
 
             var points = _unitOfWork.PathPoints.GetAll(p => p.Route.Id == request.RouteId).ToList();
             var startingPoint = points.SingleOrDefault(p => p.Id == request.StartingPointId);
 
             if (startingPoint == null)
-                throw new AppException("Point does not belong to this route or does not exist");
+                throw new AppException("Point does not exist", HttpStatusCode.NotFound);
 
             var result = CalculateNearestNeighborPath(points, startingPoint);
 

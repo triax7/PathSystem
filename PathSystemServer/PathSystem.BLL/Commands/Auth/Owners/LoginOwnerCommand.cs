@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Web.Helpers;
@@ -36,7 +37,7 @@ namespace PathSystem.BLL.Commands.Auth.Owners
             var owner = _unitOfWork.Owners.GetAll().SingleOrDefault(u => u.Email == request.Email);
 
             if (owner == null || !Crypto.VerifyHashedPassword(owner.PasswordHash, request.Password))
-                throw new AppException("Owner not found");
+                throw new AppException("Owner not found", HttpStatusCode.NotFound);
 
             var accessToken = _tokenService.GenerateAccessToken(owner);
             var refreshToken = _tokenService.GenerateRefreshToken();

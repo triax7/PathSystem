@@ -1,4 +1,5 @@
-﻿using System.Threading;
+﻿using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
 using PathSystem.BLL.Abstractions;
@@ -24,7 +25,7 @@ namespace PathSystem.BLL.Queries.Auth.Users
         public Task<UserDTO> Handle(CurrentUserQuery request, CancellationToken cancellationToken)
         {
             var user = _unitOfWork.Users.GetById(request.UserId);
-            if (user == null) throw new AppException("User not found");
+            if (user == null) throw new AppException("User not found", HttpStatusCode.NotFound);
 
             return Task.FromResult(new UserDTO(user.Id, user.Name, user.Email));
         }

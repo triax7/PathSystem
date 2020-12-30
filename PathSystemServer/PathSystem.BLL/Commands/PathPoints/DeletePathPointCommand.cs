@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -37,7 +38,7 @@ namespace PathSystem.BLL.Commands.PathPoints
                 .SingleOrDefault(p => p.Id == request.PathPointId);
             
             if (point == null || point.Route.Owner.Id != request.UserId)
-                throw new AppException("Point does not exist or does not belong to you");
+                throw new AppException("Point does not exist", HttpStatusCode.NotFound);
             
             _unitOfWork.PathPoints.Delete(point);
             _unitOfWork.Commit();

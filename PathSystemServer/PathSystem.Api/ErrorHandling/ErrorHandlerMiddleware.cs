@@ -32,7 +32,7 @@ namespace PathSystem.Api.ErrorHandling
                 {
                     case AppException e:
                         // custom application error
-                        response.StatusCode = (int)HttpStatusCode.BadRequest;
+                        response.StatusCode = (int)e.StatusCode;
                         logger.LogWarning($"AppException: {error?.Message}");
                         break;
                     default:

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using MediatR;
@@ -38,16 +39,16 @@ namespace PathSystem.BLL.Commands.Auth.Users
         {
             var accessToken = new JwtSecurityTokenHandler().ReadToken(request.AccessToken) as JwtSecurityToken;
             if (accessToken == null)
-                throw new AppException("Invalid access token");
+                throw new AppException("Invalid access token", HttpStatusCode.Unauthorized);
             
             var userId = Convert.ToInt32(accessToken.Claims.FirstOrDefault(c => c.Type == "nameid")?.Value);
             var user = _unitOfWork.Users.GetById(userId);
 
             if (user == null)
-                throw new AppException("User not found");
+                throw new AppException("User not found", HttpStatusCode.NotFound);
 
             if (!_unitOfWork.UserRefreshTokens.GetAll().Any(t => t.Token == request.RefreshToken))
-                throw new AppException("Invalid refresh token");
+                throw new AppException("Invalid refresh token", HttpStatusCode.Unauthorized);
 
             var newAccessToken = _tokenService.GenerateAccessToken(user);
             var newRefreshToken = _tokenService.GenerateRefreshToken();

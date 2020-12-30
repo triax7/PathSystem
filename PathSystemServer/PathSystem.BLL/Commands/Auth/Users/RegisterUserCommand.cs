@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 using MediatR;
 using PathSystem.BLL.DTOs.Auth;
 using PathSystem.BLL.Exceptions;
@@ -42,7 +41,7 @@ namespace PathSystem.BLL.Commands.Auth.Users
             {
                 Name = request.Name,
                 Email = request.Email,
-                PasswordHash = Crypto.HashPassword(request.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
 
             _unitOfWork.Users.Add(user);

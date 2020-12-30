@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 using MediatR;
 using PathSystem.BLL.DTOs.Auth;
 using PathSystem.BLL.Exceptions;
@@ -15,11 +14,8 @@ namespace PathSystem.BLL.Commands.Auth.Users
 {
     public class LoginUserCommand : IRequest<UserDTO>
     {
-        [Required]
-        [EmailAddress]
-        public string Email { get; set; }
-        [Required]
-        public string Password { get; set; }
+        [Required] [EmailAddress] public string Email { get; set; }
+        [Required] public string Password { get; set; }
     }
 
     public class LoginUserCommandHandler : IRequestHandler<LoginUserCommand, UserDTO>
@@ -32,17 +28,18 @@ namespace PathSystem.BLL.Commands.Auth.Users
             _unitOfWork = unitOfWork;
             _tokenService = tokenService;
         }
+
         public Task<UserDTO> Handle(LoginUserCommand request, CancellationToken cancellationToken)
         {
             var user = _unitOfWork.Users.GetAll().SingleOrDefault(u => u.Email == request.Email);
 
-            if (user == null || !Crypto.VerifyHashedPassword(user.PasswordHash, request.Password))
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.PasswordHash))
                 throw new AppException("User not found", HttpStatusCode.NotFound);
 
             var accessToken = _tokenService.GenerateAccessToken(user);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
-            _unitOfWork.UserRefreshTokens.Add(new UserRefreshToken { Token = refreshToken, User = user });
+            _unitOfWork.UserRefreshTokens.Add(new UserRefreshToken {Token = refreshToken, User = user});
 
             _unitOfWork.Commit();
 

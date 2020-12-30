@@ -1,5 +1,4 @@
-﻿using System.Web.Helpers;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using PathSystem.DAL.Models;
 
 namespace PathSystem.DAL
@@ -18,7 +17,7 @@ namespace PathSystem.DAL
                     Id = 1,
                     Name = "Admin",
                     Email = "admin@admin.admin",
-                    PasswordHash = Crypto.HashPassword("admin")
+                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin")
                 }
             });
         }

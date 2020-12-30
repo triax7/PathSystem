@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using PathSystem.Api.Extensions;
 using PathSystem.BLL.Commands.Routes;
 using PathSystem.BLL.DTOs.Routing;
 using PathSystem.BLL.Queries.PathPoints;

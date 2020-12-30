@@ -3,7 +3,6 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 using MediatR;
 using PathSystem.BLL.DTOs.Auth;
 using PathSystem.BLL.Exceptions;
@@ -36,7 +35,7 @@ namespace PathSystem.BLL.Commands.Auth.Owners
         {
             var owner = _unitOfWork.Owners.GetAll().SingleOrDefault(u => u.Email == request.Email);
 
-            if (owner == null || !Crypto.VerifyHashedPassword(owner.PasswordHash, request.Password))
+            if (owner == null || !BCrypt.Net.BCrypt.Verify(request.Password, owner.PasswordHash))
                 throw new AppException("Owner not found", HttpStatusCode.NotFound);
 
             var accessToken = _tokenService.GenerateAccessToken(owner);

@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using AutoMapper;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
-using PathSystem.Api.Extensions;
 using PathSystem.BLL.Commands.PathPoints;
 using PathSystem.BLL.DTOs.Routing;
 

@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Web.Helpers;
 using MediatR;
 using PathSystem.BLL.DTOs.Auth;
 using PathSystem.BLL.Exceptions;
@@ -42,17 +41,18 @@ namespace PathSystem.BLL.Commands.Auth.Owners
             {
                 Name = request.Name,
                 Email = request.Email,
-                PasswordHash = Crypto.HashPassword(request.Password)
+                PasswordHash = BCrypt.Net.BCrypt.HashPassword(request.Password)
             };
 
             _unitOfWork.Owners.Add(owner);
 
-            var accessToken = _tokenService.GenerateAccessToken(owner);
             var refreshToken = _tokenService.GenerateRefreshToken();
 
             _unitOfWork.OwnerRefreshTokens.Add(new OwnerRefreshToken { Token = refreshToken, Owner = owner });
 
             _unitOfWork.Commit();
+
+            var accessToken = _tokenService.GenerateAccessToken(owner);
 
             return Task.FromResult(new UserDTO(owner.Id, owner.Name, owner.Email, accessToken, refreshToken));
         }

@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathSystemServer", "PathSystemServer\PathSystemServer.csproj", "{198ECF0C-F6E0-424A-A947-7B8F239811FB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "PathSystem.Api", "PathSystem.Api\PathSystem.Api.csproj", "{198ECF0C-F6E0-424A-A947-7B8F239811FB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathSystem.BLL", "PathSystem.BLL\PathSystem.BLL.csproj", "{4FA734F5-0747-4D83-8CE0-C5FC45446561}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PathSystem.DAL", "PathSystem.DAL\PathSystem.DAL.csproj", "{AB78AC1C-2B64-4962-831F-36080D6CAF75}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{198ECF0C-F6E0-424A-A947-7B8F239811FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{198ECF0C-F6E0-424A-A947-7B8F239811FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{198ECF0C-F6E0-424A-A947-7B8F239811FB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4FA734F5-0747-4D83-8CE0-C5FC45446561}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4FA734F5-0747-4D83-8CE0-C5FC45446561}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4FA734F5-0747-4D83-8CE0-C5FC45446561}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4FA734F5-0747-4D83-8CE0-C5FC45446561}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AB78AC1C-2B64-4962-831F-36080D6CAF75}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AB78AC1C-2B64-4962-831F-36080D6CAF75}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AB78AC1C-2B64-4962-831F-36080D6CAF75}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AB78AC1C-2B64-4962-831F-36080D6CAF75}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

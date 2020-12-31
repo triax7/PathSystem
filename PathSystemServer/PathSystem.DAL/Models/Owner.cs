@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using PathSystem.DAL.Abstractions;
 
 namespace PathSystem.DAL.Models
 {
-    public class Owner
+    public class Owner : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
         public string PasswordHash { get; set; }

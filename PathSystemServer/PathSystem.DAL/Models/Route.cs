@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
+using PathSystem.DAL.Abstractions;
 
 namespace PathSystem.DAL.Models
 {
-    public class Route
+    public class Route : BaseEntity
     {
-        public int Id { get; set; }
         public string Name { get; set; }
         public int OwnerId { get; set; }
         public Owner Owner { get; set; }

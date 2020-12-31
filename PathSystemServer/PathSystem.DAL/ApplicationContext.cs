@@ -8,19 +8,6 @@ namespace PathSystem.DAL
         public ApplicationContext(DbContextOptions<ApplicationContext> options) : base(options)
         {
         }
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
-            modelBuilder.Entity<User>().HasData(new[] {
-                new User()
-                {
-                    Id = 1,
-                    Name = "Admin",
-                    Email = "admin@admin.admin",
-                    PasswordHash = BCrypt.Net.BCrypt.HashPassword("admin")
-                }
-            });
-        }
         public DbSet<User> Users { get; set; }
         public DbSet<UserRefreshToken> UserRefreshTokens { get; set; }
         public DbSet<Owner> Owners { get; set; }

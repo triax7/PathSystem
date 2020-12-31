@@ -1,11 +1,12 @@
 ﻿using System;
 using System.Linq;
 using System.Linq.Expressions;
+using PathSystem.DAL.Abstractions;
 using PathSystem.DAL.Repositories.Interfaces;
 
 namespace PathSystem.DAL.Repositories.Implementations
 {
-    public class BaseRepository<T> : IBaseRepository<T> where T : class
+    public class BaseRepository<T> : IBaseRepository<T> where T : BaseEntity
     {
         protected readonly ApplicationContext _context;
 

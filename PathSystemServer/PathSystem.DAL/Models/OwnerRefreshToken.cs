@@ -1,8 +1,9 @@
-﻿namespace PathSystem.DAL.Models
+﻿using PathSystem.DAL.Abstractions;
+
+namespace PathSystem.DAL.Models
 {
-    public class OwnerRefreshToken
+    public class OwnerRefreshToken : BaseEntity
     {
-        public int Id { get; set; }
         public string Token { get; set; }
         public Owner Owner { get; set; }
     }

@@ -34,10 +34,10 @@ namespace PathSystem.BLL.Commands.PathPoints
 
         public Task<bool> Handle(DeletePathPointCommand request, CancellationToken cancellationToken)
         {
-            var point = _unitOfWork.PathPoints.GetAll().Include(p => p.Route.Owner)
-                .SingleOrDefault(p => p.Id == request.PathPointId);
+            var point = _unitOfWork.PathPoints.GetByIdWithRoute(request.PathPointId);
+            var ownsRoute = _unitOfWork.Owners.GetByIdWithRoutes(request.UserId).Routes.Contains(point.Route);
             
-            if (point == null || point.Route.Owner.Id != request.UserId)
+            if (point == null || !ownsRoute)
                 throw new AppException("Point does not exist", HttpStatusCode.NotFound);
             
             _unitOfWork.PathPoints.Delete(point);

@@ -37,7 +37,7 @@ namespace PathSystem.DAL.Repositories.Implementations
 
         public virtual T GetById(int id)
         {
-            return _context.Set<T>().Find(id);
+            return _context.Set<T>().SingleOrDefault(entity => entity.Id == id);
         }
     }
 }

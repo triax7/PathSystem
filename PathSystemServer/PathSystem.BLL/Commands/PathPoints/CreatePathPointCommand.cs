@@ -40,9 +40,9 @@ namespace PathSystem.BLL.Commands.PathPoints
 
         public Task<PathPointDTO> Handle(CreatePathPointCommand request, CancellationToken cancellationToken)
         {
-            var route = _unitOfWork.Routes.GetAll()
-                .Include(r => r.Owner).SingleOrDefault(r => r.Id == request.RouteId);
-            if (route == null || route.Owner.Id != request.UserId)
+            var route = _unitOfWork.Routes.GetById(request.RouteId);
+            var ownsRoute = _unitOfWork.Owners.GetByIdWithRoutes(request.UserId).Routes.Contains(route);
+            if (route == null || !ownsRoute)
                 throw new AppException("Route does not exist", HttpStatusCode.NotFound);
 
             var point = new PathPoint

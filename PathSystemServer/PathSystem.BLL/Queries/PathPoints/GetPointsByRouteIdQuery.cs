@@ -39,7 +39,7 @@ namespace PathSystem.BLL.Queries.PathPoints
         public Task<IEnumerable<PathPointDTO>> Handle(GetPointsByRouteIdQuery request,
             CancellationToken cancellationToken)
         {
-            var route = _unitOfWork.Routes.GetAll().Include(r => r.PathPoints)
+            var route = _unitOfWork.Routes.GetAllWithPoints()
                 .SingleOrDefault(r => r.Id == request.RouteId);
 
             if (route == null)

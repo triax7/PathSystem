@@ -1,4 +1,6 @@
-﻿using PathSystem.DAL.Models;
+﻿using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using PathSystem.DAL.Models;
 using PathSystem.DAL.Repositories.Interfaces;
 
 namespace PathSystem.DAL.Repositories.Implementations
@@ -9,6 +11,11 @@ namespace PathSystem.DAL.Repositories.Implementations
             : base(context)
         {
 
+        }
+
+        public IQueryable<Route> GetAllWithPoints()
+        {
+            return _context.Set<Route>().Include(r => r.PathPoints);
         }
     }
 }
